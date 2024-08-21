@@ -1,3 +1,4 @@
+import random
 import pandas
 
 
@@ -18,7 +19,7 @@ mini_movie_dict = {
 }
 
 mini_movie_frame = pandas.DataFrame(mini_movie_dict)
-mini_movie_frame = mini_movie_frame.set_index('Name')
+# mini_movie_frame = mini_movie_frame.set_index('Name')
 
 # Calculate the total ticket cost (ticket + surcharge)
 mini_movie_frame['Total'] = mini_movie_frame['Surcharge'] \
@@ -26,6 +27,24 @@ mini_movie_frame['Total'] = mini_movie_frame['Surcharge'] \
 
 # Calculate the profit for each ticket
 mini_movie_frame['Profit'] = mini_movie_frame['Ticket Price'] - 5
+
+# Choose a winner from a name list
+winner_name = random.choice(all_names)
+
+# get position of winner name in list
+win_index = all_names.index(winner_name)
+
+# look up total amount won (ie: ticket price + surcharge)
+total_won = mini_movie_frame.at[win_index, 'Total']
+
+# set index at end (before printing)
+mini_movie_frame = mini_movie_frame.set_index('Name')
+print(mini_movie_frame)
+
+print()
+print('---- Raffle Winner ----')
+print(" Congrats {}. You have won ${} ie: your ticket is free!".format(winner_name, total_won))
+
 
 # Calculate ticket and profit totals
 total = mini_movie_frame['Total'].sum()
