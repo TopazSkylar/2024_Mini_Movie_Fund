@@ -68,7 +68,7 @@ def int_check(question):
 
 
 # checks that users enter a valid response (yes/no, cash/credit) based on a list of options
-def string_checker(question, valid_ans_list=('yes', 'no'), num_letters=1):
+def string_checker(question, valid_ans_list, num_letters=1):
     """Checks that users enter the full word or then, letter/s of a word from a list of valid responses"""
 
     while True:
@@ -86,21 +86,22 @@ def string_checker(question, valid_ans_list=('yes', 'no'), num_letters=1):
             elif response == item[:num_letters]:
                 return item
 
-        print("Please answer yes or no")
+        print(f"Please enter {valid_ans_list})")
 
 
 # currency formatting function
 def currency(x):
+    """Formats numbers as currency ($#.##)"""
     return "${:.2f}".format(x)
 
 
 # main routine goes here
+yes_no_list = ['yes', 'no']
+payment_list = ["cash", "credit"]
 
 # set maximum number of tickets below
-MAX_TICKETS = 3
+MAX_TICKETS = 30
 tickets_sold = 0
-
-payment_list = ("cash", "credit")
 
 # Ticket Price List
 CHILD_PRICE = 7.50
@@ -123,7 +124,7 @@ mini_movie_dict = {
 }
 
 # ask user if they want to see the instructions
-instructions = string_checker("Do you want to read the instructions? ")
+instructions = string_checker("Do you want to read the instructions? ", yes_no_list, 1)
 
 if instructions == "yes":
     show_instructions()
@@ -133,14 +134,18 @@ print()
 
 # loop to sell tickets
 
-while True:
+while tickets_sold < MAX_TICKETS:
     print()
 
     # ask user for their name (check it's not blank)
     name = not_blank("Please enter your name or 'xxx' to quit : ")
 
     if name == 'xxx':
-        break
+        if tickets_sold < 1:
+            print("You must sell at least one ticket to exit")
+            continue
+        else:
+            break
 
     age = int_check("Age: ")
     if 12 <= age <= 120:
@@ -177,6 +182,8 @@ while True:
     all_names.append(name)
     all_ticket_costs.append(price)
     all_surcharges.append(surcharge)
+
+    tickets_sold += 1
 
 # # create data frame from dictionary to organise information
 mini_movie_frame = pandas.DataFrame(mini_movie_dict)
